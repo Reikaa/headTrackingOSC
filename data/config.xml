@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version="1.0">
+  <width>1440</width>
+  <height>900</height>
+  <!-- all the colours here are in RGB and have a leading FF -->
+  <bg>ff333333</bg>
+  <mebg>ff0000ff</mebg>
+  <meshadow>ff000000</meshadow>
+  <metxt>ff00ff00</metxt>
+  <labeltxt>ff000000</labeltxt>
+  <far>
+  	<threshold>100</threshold>
+  	<mesize>100</mesize>
+  </far>
+  <medium>
+  	<threshold>80</threshold>
+  	<mesize>200</mesize>
+  </medium>
+  <near>
+  	<threshold>0</threshold>
+  	<mesize>400</mesize>
+  </near>
+
+  <group name="redgroup" colour="ffff0000"/>
+  <group name="greengroup" colour="ff00ff00"/>
+  <group name="bluegroup" colour="ff0000ff"/>
+
+  <person name="Willard Libby" group="redgroup" visibility="far"/>
+  <person name="Milton Friedman" group="redgroup" visibility="medium"/>
+  <person name="Derek Walcott" group="bluegroup" visibility="near"/>
+</config>
