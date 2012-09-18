@@ -6,8 +6,9 @@ import java.awt.Rectangle;
 
 import javax.xml.bind.*;
 
-int boxWidth=10;
-Rectangle r=new Rectangle(100,100,boxWidth,boxWidth);
+//int boxWidth=10;
+Rectangle r=new Rectangle(100,100,10,10);
+int currentRange=2;
 
 OscP5 oscP5;
 
@@ -24,6 +25,7 @@ long lastTimeDataSeen=0;
 PFont font;
 
 AppConfig config;
+Box people[];
 
 void setup() {
    try {
@@ -37,6 +39,15 @@ void setup() {
     
     oscP5 = new OscP5(this,8338);
     Ani.init(this);
+    
+    people=new Box[config.people.size()];
+    for(int n=0;n<config.people.size();++n){
+      people[n]=new Box();
+      people[n].text=config.people.get(n).name;
+      people[n].fillColour=config.getGroupByName(config.people.get(n).group).colour;
+      people[n].textColour=config.labeltxt;
+      people[n].shadowColour=config.shadow;
+    }
     
     noCursor();
   }
@@ -52,34 +63,33 @@ void draw() {
   noFill();
   
   int targetBoxWidth=0;
-  int range=2;
+  int targetRange=2;
   if((millis()-lastTimeDataSeen)>headLostInterval){
     //head lost
     rectMode(CENTER);
     ellipse(10,10,10,10);
     targetBoxWidth=config.far.mesize;
-    range=2;
+    targetRange=2;
   }
   else{
     float distanceFromScreenInCm=getDistanceFromScreenInCm(headZ);
     if(distanceFromScreenInCm>config.far.threshold){
       targetBoxWidth=config.far.mesize;
-      range=2;
+      targetRange=2;
     }
     else if(distanceFromScreenInCm>config.medium.threshold){
       targetBoxWidth=config.medium.mesize;
-      range=1;
+      targetRange=1;
     }
     else if(distanceFromScreenInCm>config.near.threshold){
       targetBoxWidth=config.near.mesize;
-      range=0;
+      targetRange=0;
     }
   }
-   
-  if(targetBoxWidth!=boxWidth){
-    boxWidth=targetBoxWidth;
-    Ani.to(r, 1.5, "width", boxWidth);
-    Ani.to(r, 1.5, "height", boxWidth);
+  
+  if(targetRange!=currentRange){ 
+    animateTransition(targetRange);
+    currentRange=targetRange;
   }
   
   rectMode(CENTER);
@@ -94,30 +104,58 @@ void draw() {
   textAlign(CENTER,CENTER);
   text("ME",width/2,height/2,r.width,r.height);
   
-  drawPeople(range);
+  drawPeople(targetRange);
+}
+
+void animateTransition(int targetRange){
+  Ani.to(r, 1.5, "width", config.getMeBoxSize(targetRange));
+  Ani.to(r, 1.5, "height", config.getMeBoxSize(targetRange));
+  
+  Box targetBox=null;
+  for(int n=0;n<config.people.size();++n){
+    targetBox=config.people.get(n).getBoxN(targetRange);
+    
+    if(targetBox!=null){
+      if(people[n].alpha==0){
+        //was previously invisible => just appear
+        people[n].x=targetBox.x;
+        people[n].y=targetBox.y;
+        people[n].width=targetBox.width;
+        people[n].height=targetBox.height;
+      }
+      else{
+        Ani.to(people[n], 1.5, "x", targetBox.x);
+        Ani.to(people[n], 1.5, "y", targetBox.y);
+        Ani.to(people[n], 1.5, "width", targetBox.height);
+        Ani.to(people[n], 1.5, "height", targetBox.height);
+      }
+      
+      people[n].alpha=255;
+    }
+    else{
+      people[n].alpha=0;
+    }
+  }
 }
 
 void drawPeople(int range){
-  for(Person p : config.people) {
-    if(p.getVisibility()<=range) {
-      Box thisBox=p.getBoxN(range);
-      
-      if(thisBox!=null){
-        rectMode(CORNER);
-        noStroke();
-        
-        fill(unhex(config.shadow));
-        rect(thisBox.x+2,thisBox.y+2,thisBox.width-2,thisBox.height-2);
-        
-        fill(unhex(config.getGroupByName(p.group).colour));
-        rect(thisBox.x,thisBox.y,thisBox.width-2,thisBox.height-2);
-        
-        textFont(font,12);
-        fill(unhex(config.labeltxt));
-        textAlign(CENTER,CENTER);
-        text(p.name,thisBox.x,thisBox.y,thisBox.width,thisBox.height);
-      }
-    }
+  for(Box p : people) {
+    rectMode(CORNER);
+    noStroke();
+    
+    color shadowColour=unhex(p.shadowColour);
+    fill(red(shadowColour),green(shadowColour),green(shadowColour),p.alpha);
+    rect(p.x+2,p.y+2,p.width-2,p.height-2);
+    
+    color fillColour=unhex(p.fillColour);
+    fill(red(fillColour),green(fillColour),green(fillColour),p.alpha);
+    rect(p.x,p.y,p.width-2,p.height-2);
+    
+    textFont(font,12);
+    color textColour=unhex(p.textColour);
+    fill(red(textColour),green(textColour),green(textColour),p.alpha);
+    textAlign(CENTER,CENTER);
+    text(p.text,p.x,p.y,p.width,p.height);
   }
 }
 

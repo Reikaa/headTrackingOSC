@@ -45,4 +45,8 @@ public class Person{
     
     return(v);
   }
+  
+  boolean isVisible(int range){
+    return(getVisibility()<=range);
+  }
 }

@@ -12,4 +12,11 @@ public class Box{
 
   @XmlAttribute
   int height;
+  
+  String shadowColour;
+  String fillColour;
+  String textColour;
+  String text;
+  
+  float alpha=0;
 }  

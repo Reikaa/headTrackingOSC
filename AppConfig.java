@@ -51,6 +51,18 @@ public class AppConfig {
     
   @XmlElement
     Distance near;
+    
+  int getMeBoxSize(int range){
+    int meBoxSize=0;
+    
+    switch(range){
+      case 0: meBoxSize=near.mesize; break;
+      case 1: meBoxSize=medium.mesize; break;
+      case 2: meBoxSize=far.mesize; break;
+    }
+    
+    return(meBoxSize);
+  }
 
   @XmlElement(name="group")
     List<Group> groups=new ArrayList<Group>();
