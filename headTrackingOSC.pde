@@ -84,7 +84,7 @@ void draw() {
   
   rectMode(CENTER);
   noStroke();
-  fill(unhex(config.meshadow));
+  fill(unhex(config.shadow));
   rect((width/2)+2,(height/2)+2,r.width,r.height);
   fill(unhex(config.mebg));
   rect(width/2,height/2,r.width,r.height);
@@ -98,19 +98,25 @@ void draw() {
 }
 
 void drawPeople(int range){
-  for(Person u : config.people) {
-    if(u.getVisibility()<=range) {
-      /*
-      rectMode(CENTER);
-      noStroke();
-      fill(unhex(config.getGroupByName(u.group).colour));
-      rect(width/2,height/2,r.width,r.height);
+  for(Person p : config.people) {
+    if(p.getVisibility()<=range) {
+      Box thisBox=p.getBoxN(range);
       
-      textFont(font,48);
-      fill(unhex(config.labeltxt));
-      textAlign(CENTER,CENTER);
-      text(u.name,width/2,height/2,r.width,r.height);
-      */
+      if(thisBox!=null){
+        rectMode(CORNER);
+        noStroke();
+        
+        fill(unhex(config.shadow));
+        rect(thisBox.x+2,thisBox.y+2,thisBox.width-2,thisBox.height-2);
+        
+        fill(unhex(config.getGroupByName(p.group).colour));
+        rect(thisBox.x,thisBox.y,thisBox.width-2,thisBox.height-2);
+        
+        textFont(font,12);
+        fill(unhex(config.labeltxt));
+        textAlign(CENTER,CENTER);
+        text(p.name,thisBox.x,thisBox.y,thisBox.width,thisBox.height);
+      }
     }
   }
 }

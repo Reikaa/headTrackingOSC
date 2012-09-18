@@ -4,8 +4,8 @@
   <height>900</height>
   <!-- all the colours here are in RGB and have a leading FF -->
   <bg>ff333333</bg>
+  <shadow>ff000000</shadow>
   <mebg>ff0000ff</mebg>
-  <meshadow>ff000000</meshadow>
   <metxt>ff00ff00</metxt>
   <labeltxt>ff000000</labeltxt>
   <far>
@@ -21,11 +21,20 @@
   	<mesize>400</mesize>
   </near>
 
-  <group name="redgroup" colour="ffff0000"/>
-  <group name="greengroup" colour="ff00ff00"/>
-  <group name="bluegroup" colour="ff0000ff"/>
+  <group name="lightredgroup" colour="fff08080"/>
+  <group name="lightgreengroup" colour="ff98fb98"/>
+  <group name="lightbluegroup" colour="ff87cefa"/>
 
-  <person name="Willard Libby" group="redgroup" visibility="far"/>
-  <person name="Milton Friedman" group="redgroup" visibility="medium"/>
-  <person name="Derek Walcott" group="bluegroup" visibility="near"/>
+  <person name="Willard Libby" group="lightredgroup">
+    <far x="250" y="400" width="100" height="100"/>
+  </person>
+  <person name="Milton Friedman" group="lightredgroup">
+    <far x="300" y="20" width="100" height="100"/>
+    <medium x="40" y="40" width="150" height="200"/>
+  </person>
+  <person name="Derek Walcott" group="lightbluegroup">
+    <far x="30" y="30" width="100" height="100"/>
+    <medium x="150" y="150" width="150" height="200"/>
+    <near x="200" y="200" width="100" height="100"/>
+  </person>
 </config>

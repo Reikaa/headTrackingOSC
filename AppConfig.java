@@ -35,7 +35,7 @@ public class AppConfig {
     String mebg;
   
   @XmlElement
-    String meshadow;
+    String shadow;
     
   @XmlElement
     String metxt;
